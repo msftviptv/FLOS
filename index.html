@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>📋 إدارة الطلبات (احترافي)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>📋 لوحة إدارة الطلبات</h1>
+
+  <div class="form">
+    <input type="text" id="order" placeholder="اسم الطلب">
+    <input type="number" id="price" placeholder="السعر">
+    <button onclick="addOrder()">➕ إضافة طلب</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>الطلب</th>
+        <th>السعر</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody id="ordersTable"></tbody>
+  </table>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
