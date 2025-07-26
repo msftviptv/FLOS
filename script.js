@@ -4,12 +4,14 @@ import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc }
 
 // 🔥 إعداد Firebase (حط بيانات مشروعك هنا)
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "XXXXXXXXX",
-  appId: "XXXXXXXXX"
+  apiKey: "AIzaSyDGJG8UDrzDwko-0S2Ruz5C3kJVULfEOvM",
+    authDomain: "mhfazty.firebaseapp.com",
+    databaseURL: "https://mhfazty-default-rtdb.firebaseio.com",
+    projectId: "mhfazty",
+    storageBucket: "mhfazty.firebasestorage.app",
+    messagingSenderId: "116356690368",
+    appId: "1:116356690368:web:51125fea8ad610c6ded825",
+    measurementId: "G-MT1GMWBFLL"
 };
 
 const app = initializeApp(firebaseConfig);
