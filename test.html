@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة الطلبات</title>
+  <style>
+    body { font-family: sans-serif; background: #f8f8f8; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+    th { background: #eee; }
+    .hidden { display: none; }
+    .login { max-width: 300px; margin: 100px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #aaa; }
+  </style>
+</head>
+<body>
+
+<div id="login" class="login">
+  <h2>تسجيل الدخول</h2>
+  <input type="text" id="username" placeholder="اسم المستخدم"><br><br>
+  <input type="password" id="password" placeholder="كلمة المرور"><br><br>
+  <button onclick="login()">دخول</button>
+</div>
+
+<div id="panel" class="hidden">
+  <h2>جدول الطلبات</h2>
+  <table id="ordersTable">
+    <thead>
+      <tr>
+        <th>الطلب</th>
+        <th>المبلغ</th>
+        <th>التحكم</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Firebase Scripts -->
+<script type="module">
+  // Firebase استيراد
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // إعداد Firebase
+  const firebaseConfig = {
+  apiKey: "AIzaSyDGJG8UDrzDwko-0S2Ruz5C3kJVULfEOvM",
+    authDomain: "mhfazty.firebaseapp.com",
+    databaseURL: "https://mhfazty-default-rtdb.firebaseio.com",
+    projectId: "mhfazty",
+    storageBucket: "mhfazty.firebasestorage.app",
+    messagingSenderId: "116356690368",
+    appId: "1:116356690368:web:51125fea8ad610c6ded825",
+    measurementId: "G-MT1GMWBFLL"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const loginBox = document.getElementById("login");
+  const panelBox = document.getElementById("panel");
+
+  // تسجيل الدخول البسيط
+  window.login = function () {
+    const u = document.getElementById("username").value;
+    const p = document.getElementById("password").value;
+    if (u === "admin" && p === "admin2024") {
+      loginBox.classList.add("hidden");
+      panelBox.classList.remove("hidden");
+      loadOrders();
+    } else {
+      alert("خطأ في البيانات");
+    }
+  };
+
+  // تحميل البيانات
+  async function loadOrders() {
+    const ordersTable = document.querySelector("#ordersTable tbody");
+    ordersTable.innerHTML = "";
+    const snapshot = await getDocs(collection(db, "orders"));
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td contenteditable onblur="editOrder('${docSnap.id}', this.innerText, null)">${data.order}</td>
+        <td contenteditable onblur="editOrder('${docSnap.id}', null, this.innerText)">${data.amount}</td>
+        <td><button onclick="deleteOrder('${docSnap.id}')">حذف</button></td>
+      `;
+      ordersTable.appendChild(tr);
+    });
+  }
+
+  // حذف طلب
+  window.deleteOrder = async function (id) {
+    await deleteDoc(doc(db, "orders", id));
+    loadOrders();
+  };
+
+  // تعديل طلب أو مبلغ
+  window.editOrder = async function (id, newOrder, newAmount) {
+    const ref = doc(db, "orders", id);
+    const data = {};
+    if (newOrder !== null) data.order = newOrder;
+    if (newAmount !== null) data.amount = isNaN(newAmount) ? 0 : Number(newAmount);
+    await updateDoc(ref, data);
+  };
+</script>
+
+</body>
+</html>
